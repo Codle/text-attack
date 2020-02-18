@@ -8,14 +8,12 @@ from copy import deepcopy
 import numpy as np
 from gensim.models import KeyedVectors
 from preprocessing_module import preprocess_text
-# from distance_module.measure
+from distance_module import measure as dis_utils
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_file', default='/tcdata/benchmark_texts.txt',
                     help='输入文件')
-parser.add_argument('--input_sentence', default='我爱北京天安门',
-                    help='测试输入')
 parser.add_argument('--model_path', default='data/mini.ftz',
                     help='预先模型文件')
 parser.add_argument('--output_file', default='adversarial.txt', help='输出文件')
@@ -24,13 +22,14 @@ EMBEDDING_PATH = 'data/zh.300.vec.gz'
 EMBEDDING_DIM = 300
 DEFAULT_KEYVEC = KeyedVectors.load_word2vec_format(EMBEDDING_PATH, limit=50000)
 
+
 def compute_word_importance(model, text_tokens):
     """ 计算词语的重要性
     """
     importances = []
     temp_text = []
     ori_label, ori_score = model.predict(''.join(text_tokens))
-    
+
     for i in range(len(text_tokens)):
         new_text = ''.join(text_tokens[:i] + text_tokens[i+1:])
         temp_text.append(new_text)
@@ -39,7 +38,8 @@ def compute_word_importance(model, text_tokens):
         if label[0] == ori_label[0]:
             importances.append(ori_score[0] - score[0])
         else:
-            importances.append((ori_score[0] - score[0]) + (score[0] - ori_score[0]))
+            importances.append(
+                (ori_score[0] - score[0]) + (score[0] - ori_score[0]))
     return importances
 
 
@@ -77,20 +77,30 @@ def main():
         # 第二步：选出候选单词
         candidates = dict()
         for word in words:
-            top_words = DEFAULT_KEYVEC.most_similar(positive=word, topn=10000)
+            top_words = DEFAULT_KEYVEC.most_similar(positive=word, topn=300)
             sim_words = []
-            for idx, (_word, _score) in enumerate(reversed(top_words)):
-                
+            for idx, (_word, _score) in enumerate(top_words):
+
                 # if _score < 0.03:
                 _word = preprocess_text(_word)
-                _cutword = [ _ for _ in jieba.cut(_word)]
+                _cutword = [_ for _ in jieba.cut(_word)]
                 if len(_word) and len(_cutword) == 1:
                     sim_words.append(_word)
                 # else:
                 #     break
-                if len(sim_words) > 50:
+                if len(sim_words) > 100:
                     break
             candidates[word] = sim_words
+
+        # Jaccord
+        for key in candidates.keys():
+            _candidate = []
+            for candidate in candidates[key]:
+                dis = dis_utils.normalized_levenshtein(key, candidate)
+                # print(dis)
+                if dis > 0.5:
+                    _candidate.append(candidate)
+            candidates[key] = _candidate
 
         # print(candidates)
         # break
@@ -126,7 +136,7 @@ def main():
     target = json.dumps({'text': out_lines}, ensure_ascii=False)
     with open(args.output_file, 'w', encoding='utf-8') as f:
         f.write(target)
-    
+
 
 if __name__ == "__main__":
     args = parser.parse_args()

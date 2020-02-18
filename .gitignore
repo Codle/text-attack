@@ -2,3 +2,4 @@
 .devcontainer
 data
 __pycache__
+adversarial.txt
