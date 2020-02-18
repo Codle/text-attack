@@ -77,7 +77,7 @@ def main():
         # 第二步：选出候选单词
         candidates = dict()
         for word in words:
-            top_words = DEFAULT_KEYVEC.most_similar(positive=word, topn=300)
+            top_words = DEFAULT_KEYVEC.most_similar(positive=word, topn=600)
             sim_words = []
             for idx, (_word, _score) in enumerate(reversed(top_words)):
 
