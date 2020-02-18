@@ -1,0 +1,6 @@
+fasttext
+jieba
+numpy
+gensim
+mafan
+editdistance
