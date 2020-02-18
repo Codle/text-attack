@@ -79,7 +79,7 @@ def main():
         for word in words:
             top_words = DEFAULT_KEYVEC.most_similar(positive=word, topn=300)
             sim_words = []
-            for idx, (_word, _score) in enumerate(top_words):
+            for idx, (_word, _score) in enumerate(reversed(top_words)):
 
                 # if _score < 0.03:
                 _word = preprocess_text(_word)
