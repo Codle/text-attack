@@ -1,5 +1,5 @@
 # Base Image
-FROM registry.cn-shanghai.aliyuncs.com/codle/text-attack-git:0.1
+FROM registry.cn-shanghai.aliyuncs.com/codle/text-attack-git:0.1.4
 
 ADD . /
 
