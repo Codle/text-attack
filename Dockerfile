@@ -5,8 +5,8 @@ ADD . /
 
 WORKDIR /
 
-RUN wget -P /data/ https://ai.tencent.com/ailab/nlp/data/Tencent_AILab_ChineseEmbedding.tar.gz
-RUN tar -xvf /data/Tencent_AILab_ChineseEmbedding.tar.gz -C /data/
+RUN wget -P /data/ https://ai.tencent.com/ailab/nlp/data/Tencent_AILab_ChineseEmbedding.tar.gz -q
+# RUN tar -xvf /data/Tencent_AILab_ChineseEmbedding.tar.gz -C /data/
 
 RUN ll /data/
 
