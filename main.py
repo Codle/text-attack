@@ -17,7 +17,7 @@ parser.add_argument('--input_file', default='/tcdata/benchmark_texts.txt',
 parser.add_argument('--model_path', default='data/mini.ftz',
                     help='预先模型文件')
 parser.add_argument('--output_file', default='adversarial.txt', help='输出文件')
-parser.add_argument('--vector_file', default='data/Tencent_AILab_ChineseEmbedding.tar.gz')
+parser.add_argument('--vector_file', default='data/Tencent_AILab_ChineseEmbedding.txt')
 
 
 def compute_word_importance(model, text_tokens):
@@ -141,6 +141,6 @@ if __name__ == "__main__":
     # 初始化词典
     EMBEDDING_PATH = args.vector_file
     EMBEDDING_DIM = 300
-    DEFAULT_KEYVEC = KeyedVectors.load_word2vec_format(EMBEDDING_PATH, limit=50000)
+    DEFAULT_KEYVEC = KeyedVectors.load_word2vec_format(EMBEDDING_PATH, binary=False, encoding='utf-8')
 
     main()
