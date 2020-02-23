@@ -17,8 +17,7 @@ parser.add_argument('--input_file', default='/tcdata/benchmark_texts.txt',
 parser.add_argument('--model_path', default='data/mini.ftz',
                     help='预先模型文件')
 parser.add_argument('--output_file', default='adversarial.txt', help='输出文件')
-parser.add_argument(
-    '--vector_file', default='data/Tencent_AILab_ChineseEmbedding.txt')
+parser.add_argument('--vector_file', default='data/tencent.txt')
 
 
 def compute_word_importance(model, text_tokens):
